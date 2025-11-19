@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+    /* Page background and font */
+    body { 
+        font-family: Arial; 
+        background: #eef2f7; 
+        padding: 20px; 
+        margin: 0;
+        color: #333;
+    }
+
+    h2 { 
+        margin-bottom: 10px; 
+        color: #222; 
+    }
+
+    /* Logout button */
+    .logout { 
+        float: right; 
+        text-decoration: none; 
+        background: #555; 
+        color: white; 
+        padding: 6px 10px; 
+        border-radius: 5px; 
+    }
+    .logout:hover { 
+        background: #333; 
+    }
+
+    /* Section boxes */
+    .section { 
+        background: white; 
+        padding: 15px; 
+        border-radius: 10px; 
+        margin-top: 25px; 
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    }
+
+    /* Tables */
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-top: 12px; 
+    }
+
+    table, th, td { 
+        border: 1px solid #ccc; 
+    }
+
+    th, td { 
+        padding: 8px; 
+        text-align: left; 
+    }
+
+    th { 
+        background: #f4f4f4; 
+        color: #444;
+    }
+
+    /* Default Button (Grey) */
+    .button { 
+        padding: 7px 12px; 
+        border-radius: 6px; 
+        background: #666; 
+        color: white; 
+        text-decoration: none; 
+        border: none;
+        cursor: pointer;
+    }
+
+    .button:hover { 
+        background: #444; 
+    }
+
+    /* Red Button */
+    .button-red { 
+        background: #b85c5c; 
+    }
+    .button-red:hover { 
+        background: #8f3f3f; 
+    }
+
+    /* Orange Button */
+    .button-orange { 
+        background: #c08b4d; 
+    }
+    .button-orange:hover { 
+        background: #936734; 
+    }
+
+    /* Blue-Grey Button */
+    .button-blue { 
+        background: #5c6f82;
+    }
+    .button-blue:hover { 
+        background: #435361;
+    }
+</style>
+
+</head>
+<body>
+    <form method="GET" action="{{ url_for('search_all') }}">
+    <input type="text" name="q" placeholder="Search doctor patient..." 
+           value="{{ search_query if search_query else '' }}"
+           style="padding:8px; width:250px; border-radius:5px; border:1px solid #ccc;">
+    <button type="submit" style="padding:8px 12px; background:#3498db; color:white; border:none; border-radius:5px;">
+        Search
+    </button>
+    
+</form>
+<br>
+
+
+<h2>Admin Dashboard</h2>
+<a class="logout" href="/logout">Logout</a>
+
+<!-- Doctors Section -->
+<div class="section">
+    <h3>Registered Doctors</h3>
+    <a class="button" href="{{ url_for('add_doctor') }}">+ Add Doctor</a>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Specialization</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+        {% for d in doctors %}
+        <tr>
+            <td>{{ d.id }}</td>
+            <td>{{ d.name }}</td>
+            <td>{{ d.email }}</td>
+            <td>{{ d.specialization if d.specialization else "N/A" }}</td>
+            <td>{{ d.department.name if d.department else "N/A" }}</td>
+            <td>
+                <a href="{{ url_for('edit_doctor', doctor_id=d.id) }}" class="button">Edit</a>
+                <a href="{{ url_for('delete_doctor', doctor_id=d.id) }}" class="button button-red">Delete</a>
+                <a href="{{ url_for('toggle_blacklist', doctor_id=d.id) }}"
+                    class="button {% if d.blacklist %}button-green{% else %}button-orange{% endif %}">
+                    {% if d.blacklist %}Unblock{% else %}Blacklist{% endif %}
+                        </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="section">
+    <h3>Registered Patients</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for p in patients %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.email }}</td>
+            <td>
+                {% if p.appointments|length > 0 %}
+                    Appointment Booked
+                {% else %}
+                    No Appointment
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ url_for('edit_patient', id=p.id) }}" class="button">Edit</a>
+                <a href="{{ url_for('delete_patient', id=p.id) }}" class="button button-red">Delete</a>
+                <a href="{{ url_for('toggle_blacklist_patient', patient_id=p.id) }}"
+                   class="button {% if p.blacklist %}button-green{% else %}button-orange{% endif %}">
+                   {% if p.blacklist %}Unblock{% else %}Blacklist{% endif %}
+                </a>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="section">
+    <h3>Upcoming Appointments</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>History</th>
+
+        </tr>
+        {% for a in appointments %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.doctor.name }}</td>
+            <td>{{ a.patient.name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.status }}</td>
+            <td>
+                <a href="{{ url_for('patient_history', patient_id=a.patient.id) }}" class="button">View History</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Doctor</title>
+    <style>
+        body { font-family: Arial; background: #eef2f7; padding: 30px; }
+        .container {
+            width: 450px; margin: auto; background: white;
+            padding: 20px; border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%; padding: 10px; margin-top: 12px;
+            border-radius: 5px; border: 1px solid #ccc;
+        }
+        button {
+            width: 100%; padding: 12px; margin-top: 15px;
+            background: #3498db; color: white; border: none;
+            border-radius: 5px; cursor: pointer;
+        }
+        a { text-decoration: none; display: block; text-align: center; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Doctor</h2>
+
+    <form method="POST">
+
+        <input type="text" name="name" placeholder="Full Name" required>
+
+        <input type="email" name="email" placeholder="Email" required>
+
+        <input type="text" name="password" placeholder="Password" required>
+
+        <input type="text" name="specialization" placeholder="Specialization (eg. Cardiologist)" required>
+
+        <input type="text" name="department" placeholder="Department (eg. Cardiology)" required>
+
+        <button type="submit">Add Doctor</button>
+
+        <a href="/admin">Back to Admin</a>
+    </form>
+</div>
+
+</body>
+</html>

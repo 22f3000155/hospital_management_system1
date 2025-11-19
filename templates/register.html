@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e0e0e0; /* light grey */
+            margin: 0;
+            padding: 40px 0;
+        }
+
+        .header {
+            background: #333; /* dark grey/blackish */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #888;
+            font-size: 15px;
+            background: #f7f7f7;
+            color: #333;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #333;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #333;  /* black/grey button */
+            border: none;
+            color: white;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #000;
+        }
+
+        a {
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        a:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Hospital Management System
+    </div>
+
+    <div class="container">
+        <h2>Register as Patient</h2>
+
+        <form method="POST" action="/register/patient">
+
+            <input type="text" name="name" placeholder="Full Name" required>
+
+            <input type="email" name="email" placeholder="Email" required>
+
+            <input type="password" name="password" placeholder="Password" required>
+
+            <input type="text" name="address" placeholder="Address" required>
+
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <button type="submit">Register</button>
+
+            <a href="/login">Already have an account? Login</a>
+        </form>
+    </div>
+
+</body>
+</html>

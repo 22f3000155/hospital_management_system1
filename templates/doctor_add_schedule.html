@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Schedule</title>
+    <style>
+        body { font-family: Arial; 
+        background: #eef2f7; 
+        padding: 30px; 
+    }
+        form { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            width: 350px; 
+            margin: auto; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+        }
+        input { 
+            width: 100%; 
+            padding: 8px; 
+            margin-bottom: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+        }
+        button { 
+            background: #4d4d4d; 
+            color: white; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+            button:hover { background: #4d4d4d}
+        a { 
+            display: block; 
+            margin-top: 15px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: #555; 
+        }
+    </style>
+</head>
+<body>
+
+<h2>Add Available Slot</h2>
+
+<form method="POST">
+    <label>Date:</label>
+    <input type="date" name="date" required>
+
+    <label>Time:</label>
+    <input type="time" name="time" required>
+    <select name="ampm" required>
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+        </select>
+
+    <button type="submit">Add Slot</button>
+</form>
+
+<a href="{{ url_for('doctor_dashboard') }}">Back to Dashboard</a>
+
+</body>
+</html>

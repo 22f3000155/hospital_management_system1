@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            background: #eef2f7; 
+            padding: 20px; 
+            margin: 0; 
+            color: #333;
+        }
+
+        .logout { 
+            float: right; 
+            background: #555; 
+            color: #fff; 
+            padding: 6px 10px; 
+            border-radius: 4px; 
+            text-decoration: none; 
+        }
+        .logout:hover { background: #333; }
+
+        h2 { 
+            margin-top: 0; 
+            color: #222; 
+        }
+
+        .section { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 20px; 
+            box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+
+        table, th, td { 
+            border: 1px solid #ccc; 
+        }
+
+        th, td { 
+            padding: 8px; 
+        }
+
+        th { 
+            background: #f8f8f8; 
+            color: #444; 
+        }
+
+        /* buttons */
+        .btn { 
+            padding: 6px 10px; 
+            border-radius: 4px; 
+            text-decoration: none; 
+            color: white; 
+            display: inline-block;
+        }
+
+        .btn-blue { 
+            background: #666; 
+        }
+        .btn-blue:hover { 
+            background: #444; 
+        }
+
+        .btn-red { 
+            background: #b85c5c; 
+        }
+        .btn-red:hover { 
+            background: #8f3f3f; 
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>Patient Dashboard</h2>
+<a class="logout" href="/logout">Logout</a>
+
+<div class="section">
+    <h3>My Appointments</h3>
+
+    <a class="btn btn-blue" href="{{ url_for('book_appointment') }}">Book New Appointment</a>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for a in appointments %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.doctor.name }}</td>
+            <td>{{ a.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ a.time.strftime('%H:%M') }}</td>
+            <td>{{ a.status }}</td>
+            <td>
+                {% if a.status == 'Booked' %}
+                <form action="{{ url_for('patient_cancel_appointment', appointment_id=a.id) }}" method="POST" style="display:inline;">
+                    <button class="btn btn-red" type="submit">Cancel</button>
+                </form>
+                {% else %}
+                -
+                {% endif %}
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #eef2f7;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h2, h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Logout Button */
+        .logout {
+            float: right;
+            text-decoration: none;
+            background: #555;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+        .logout:hover {
+            background: #333;
+        }
+
+        /* Box Sections */
+        .section {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f4f4f4;
+        }
+
+        /* Default Button (Grey) */
+        .button {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #555;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .button:hover {
+            background: #333;
+        }
+
+        /* Cancel Button (Red-Grey) */
+        .button-red {
+            background: #b85c5c;
+        }
+        .button-red:hover {
+            background: #8f4242;
+        }
+
+        /* Completed Button (Green-Grey) */
+        .button-green {
+            background: #5c8f5c;
+        }
+        .button-green:hover {
+            background: #446b44;
+        }
+
+        /* Edit Button (Orange-Grey) */
+        .button-orange {
+            background: #c08b4d;
+        }
+        .button-orange:hover {
+            background: #936734;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h2>Doctor Dashboard</h2>
+<a class="logout" href="/logout">Logout</a>
+
+
+<div class="section">
+
+    <h3>Profile Information</h3>
+    <p><strong>Name:</strong> {{ doctor.name }}</p>
+    <p><strong>Email:</strong> {{ doctor.email }}</p>
+    <p><strong>Specialization:</strong> {{ doctor.specialization if doctor.specialization else "N/A" }}</p>
+    <p><strong>Department:</strong> {{ doctor.department.name if doctor.department else "N/A" }}</p>
+</div>
+
+
+<div class="section">
+    <h3>Upcoming Appointments</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th>Patient History</th>
+        </tr>
+        {% for a in appointments %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.patient.name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.status }}</td>
+            <td>
+                {% if a.status != 'Completed' %}
+                    <a href="{{ url_for('mark_completed', appointment_id=a.id) }}" class="button-green">Mark Completed</a>
+                {% endif %}
+                <a href="{{ url_for('cancel_appointment', appointment_id=a.id) }}" class="button-red">Cancel</a>
+                <td>
+                
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+<a href="{{ url_for('add_schedule') }}" class="button-black">Add Schedule</a>
+    
+        {% for slot in schedules %}
+        <tr>
+            <td>{{ slot.id }}</td>
+            <td>{{ slot.date }}</td>
+            <td>{{ slot.time }}</td>
+            <td>
+                {% if slot.is_booked %}
+                    Booked
+                {% else %}
+                    Available
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
+<div class="section">
+    <h3>Available Slots (Not Booked)</h3>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        {% for slot in available_slots %}
+        <tr>
+            <td>{{ slot.id }}</td>
+            <td>{{ slot.date }}</td>
+            <td>{{ slot.time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>

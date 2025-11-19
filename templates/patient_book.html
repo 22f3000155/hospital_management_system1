@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+    <style>
+    body { 
+        font-family: Arial; 
+        background: #eef2f7; 
+        padding: 20px; 
+        margin: 0;
+        color: #333;
+    }
+
+    h2 { 
+        margin-bottom: 15px; 
+        color: #222;
+    }
+
+    .section { 
+        background: white; 
+        padding: 15px; 
+        border-radius: 8px; 
+        max-width: 600px; 
+        box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+        margin-bottom: 20px;
+    }
+
+    /* Simple grey buttons */
+    .btn { 
+        padding: 6px 12px; 
+        border-radius: 4px; 
+        text-decoration: none; 
+        color: white; 
+        display: inline-block;
+        background: #666;
+        transition: 0.2s;
+    }
+
+    .btn:hover { 
+        background: #444; 
+    }
+
+    /* Optional delete button (lighter grey-red but still neutral) */
+    .btn-red { 
+        background: #777; 
+    }
+    .btn-red:hover { 
+        background: #555; 
+    }
+
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-top: 10px; 
+    }
+
+    table, th, td { 
+        border: 1px solid #ccc; 
+    }
+
+    th, td { 
+        padding: 8px; 
+    }
+
+    th { 
+        background: #f8f8f8; 
+    }
+</style>
+
+</head>
+<body>
+
+<h2>Book Appointment</h2>
+<div class="section">
+    <form method="POST">
+        <table>
+            <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
+            </tr>
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot.doctor.name }} - {{ slot.doctor.specialization if slot.doctor.specialization else "N/A" }}</td>
+                <td>{{ slot.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ slot.time.strftime('%H:%M') }}</td>
+                <td>
+                    <button class="btn btn-green" name="slot_id" value="{{ slot.id }}">Book</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+    <br>
+    <a href="{{ url_for('patient_dashboard') }}" class="btn btn-red">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

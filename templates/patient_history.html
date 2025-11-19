@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient History</title>
+    <style>
+    body { 
+        font-family: Arial; 
+        background: #f2f2f2; 
+        padding: 20px; 
+    }
+
+    .section { 
+        background: white; 
+        padding: 20px; 
+        border-radius: 8px; 
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+        max-width: 900px;
+        margin: auto;
+    }
+
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-top: 15px; 
+    }
+
+    table, th, td { 
+        border: 1px solid #ccc; 
+    }
+
+    th, td { 
+        padding: 10px; 
+        color: #333;
+    }
+
+    th { 
+        background: #e6e6e6; 
+        font-weight: bold;
+    }
+
+    a.button { 
+        background: #4d4d4d; 
+        color: white; 
+        padding: 8px 12px; 
+        border-radius: 5px; 
+        text-decoration: none; 
+        display: inline-block;
+    }
+
+    a.button:hover { 
+        background: #000; 
+    }
+</style>
+
+</head>
+<body>
+
+<h2>Patient History - {{ patient.name }}</h2>
+<a href="{{ url_for('admin_dashboard') }}" class="button">Back to Dashboard</a>
+
+<div class="section">
+    <h3>Appointment History</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+
+        {% for a in history %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.doctor.name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.status }}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
+<h3>Treatments</h3>
+<table>
+<tr><th>Diagnosis</th><th>Notes</th><th>Date</th><th>Doctor</th></tr>
+{% for t in history_treatments %}
+<tr>
+    <td>{{ t.diagnosis }}</td>
+    <td>{{ t.notes }}</td>
+    <td>{{ t.date }}</td>
+    <td>{{ t.doctor.name }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h3>Medicines</h3>
+<table>
+<tr><th>Medicine</th><th>Dosage</th><th>Frequency</th><th>Duration</th></tr>
+{% for m in history_medicines %}
+<tr>
+    <td>{{ m.medicine_name }}</td>
+    <td>{{ m.dosage }}</td>
+    <td>{{ m.frequency }}</td>
+    <td>{{ m.duration }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h3>Diagnostic Tests</h3>
+<table>
+<tr><th>Test Name</th><th>Result</th><th>Date</th></tr>
+{% for test in history_tests %}
+<tr>
+    <td>{{ test.test_name }}</td>
+    <td>{{ test.result }}</td>
+    <td>{{ test.date }}</td>
+</tr>
+{% endfor %}
+</table>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+    <style>
+    body { 
+        font-family: Arial; 
+        background: #f2f2f2; 
+        padding: 20px; 
+    }
+    h2 { 
+        margin-bottom: 15px; 
+        color: #333;
+    }
+    .form-container {
+        background: white; 
+        padding: 20px; 
+        border-radius: 10px; 
+        max-width: 500px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin: auto;
+    }
+    label { 
+        display: block; 
+        margin-top: 10px; 
+        font-weight: bold; 
+        color: #444;
+    }
+    select, input {
+        width: 100%; 
+        padding: 8px; 
+        margin-top: 5px; 
+        border-radius: 5px; 
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+    }
+    .btn {
+        margin-top: 15px; 
+        padding: 10px 15px; 
+        border-radius: 5px; 
+        border: none; 
+        color: white; 
+        cursor: pointer; 
+        font-size: 14px;
+    }
+
+    /* Save Button (Grey) */
+    .btn-save { 
+        background: #4d4d4d; 
+    }
+    .btn-save:hover { 
+        background: #000; 
+    }
+
+    /* Cancel Button (Light Grey) */
+    .btn-cancel { 
+        background: #7a7a7a; 
+        text-decoration: none; 
+        display: inline-block; 
+        padding: 10px 15px; 
+        margin-left: 10px;
+    }
+    .btn-cancel:hover { 
+        background: #555; 
+    }
+</style>
+
+</head>
+<body>
+
+<h2>Book Appointment</h2>
+
+<div class="form-container">
+    <form method="POST">
+        <label for="slot">Select Available Slot</label>
+        <select name="slot_id" id="slot" required>
+            {% for slot in slots %}
+                <option value="{{ slot.id }}">
+                    {{ slot.date }} - {{ slot.time }} | Dr. {{ slot.doctor.name }} - {{ slot.doctor.specialization if slot.doctor.specialization else "N/A" }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-save">Book Appointment</button>
+        <a href="{{ url_for('patient_dashboard') }}" class="btn-cancel">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

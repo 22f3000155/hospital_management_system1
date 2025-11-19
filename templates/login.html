@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Hospital Management System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #e0e0e0; /* light grey */
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: #333; /* dark grey */
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        /* Login Box */
+        .box {
+            background: white;
+            width: 320px;
+            margin: 60px auto;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            border-radius: 5px;
+            border: 1px solid #999;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 18px;
+            background: #444; /* grey button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #222;
+        }
+
+        .register-link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">Login</div>
+
+    <div class="box">
+
+        <form method="POST">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter Email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter Password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <a class="register-link" href="/register/patient">New patient? Register here</a>
+
+    </div>
+
+</body>
+</html>
