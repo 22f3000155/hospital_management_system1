@@ -37,7 +37,7 @@ def register():
 
         
         if User.query.filter_by(email=email).first():
-            flash("Email already exists!", "danger")
+            flash("Email already exists", "danger")
             return redirect(url_for('register'))
 
         
@@ -53,7 +53,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash("Registered successfully! Please login.", "success")
+        flash("Registered successfully Please login.", "success")
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -68,7 +68,7 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if not user:
-            flash("Email not found!", "danger")
+            flash("Email not found", "danger")
             return redirect(url_for('login'))
         
         if user.password != password:
@@ -100,7 +100,7 @@ def logout():
 def admin_dashboard():
 
     if 'user_id' not in session:
-        flash("Please login first!", "warning")
+        flash("Please login first", "warning")
         return redirect(url_for('login'))
 
     current = User.query.get(session['user_id'])
@@ -161,7 +161,7 @@ def add_doctor():
 
     
     if current.role != "admin":
-        flash("Access denied! Only admin can add doctors.", "danger")
+        flash("Access denied Only admin can add doctors.", "danger")
         return redirect(url_for('login'))
 
 
@@ -174,7 +174,7 @@ def add_doctor():
 
     
         if User.query.filter_by(email=email).first():
-            flash("Email already in use!", "danger")
+            flash("Email already in use", "danger")
             return redirect(url_for('add_doctor'))
 
     
@@ -216,7 +216,7 @@ def edit_doctor(doctor_id):
 
     doctor = User.query.get(doctor_id)
     if not doctor or doctor.role != 'doctor':
-        flash("Doctor not found!", "danger")
+        flash("Doctor not found", "danger")
         return redirect(url_for('admin_dashboard'))
 
     if request.method == 'POST':
@@ -236,7 +236,7 @@ def edit_doctor(doctor_id):
         doctor.department_id = dept.id
         db.session.commit()
 
-        flash("Doctor updated successfully!", "success")
+        flash("Doctor updated successfully", "success")
         return redirect(url_for('admin_dashboard'))
 
     departments = Department.query.all()
@@ -255,13 +255,13 @@ def delete_doctor(doctor_id):
     doctor = User.query.get(doctor_id)
 
     if not doctor or doctor.role != 'doctor':
-        flash("Doctor not found!", "danger")
+        flash("Doctor not found", "danger")
         return redirect(url_for('admin_dashboard'))
 
     db.session.delete(doctor)
     db.session.commit()
 
-    flash("Doctor removed!", "success")
+    flash("Doctor removed", "success")
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/toggle_blacklist/<int:doctor_id>')
@@ -340,12 +340,12 @@ def toggle_blacklist_patient(patient_id):
 @app.route('/doctor')
 def doctor_dashboard():
     if 'user_id' not in session:
-        flash("Please login first!", "warning")
+        flash("Please login first", "warning")
         return redirect(url_for('login'))
 
     doctor = User.query.get(session['user_id'])
     if doctor.role != "doctor":
-        flash("Access denied!", "danger")
+        flash("Access denied", "danger")
         return redirect(url_for('login'))
 
     # Booked appointments
@@ -377,7 +377,7 @@ def add_availability():
 
         existing = Availability.query.filter_by(doctor_id=doctor.id, date=date, time=time).first()
         if existing:
-            flash("Slot already exists!", "warning")
+            flash("Slot already exists", "warning")
         else:
             slot = Availability(doctor_id=doctor.id, date=date, time=time)
             db.session.add(slot)
