@@ -518,7 +518,7 @@ def add_schedule():
 
     return render_template('doctor_add_schedule.html', today=today)
 
-@app.route('/admin/appointment/complete/<int:appointment_id>')
+@app.route('/admin/appointment/complete/<int:appointment_id>')  #admin appointment 
 def admin_complete_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     appointment.status = "Completed"
