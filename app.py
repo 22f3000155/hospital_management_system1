@@ -337,7 +337,7 @@ def toggle_blacklist_patient(patient_id):
     return redirect(url_for('admin_dashboard'))
 
 
-@app.route('/doctor')
+@app.route('/doctor') # doctor routes
 def doctor_dashboard():
     if 'user_id' not in session:
         flash("Please login first", "warning")
