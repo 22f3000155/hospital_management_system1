@@ -477,7 +477,7 @@ def book_appointment():
     return render_template('patient_book.html', slots=slots)
 
 
-@app.route('/doctor/add_schedule', methods=['GET', 'POST'])
+@app.route('/doctor/add_schedule', methods=['GET', 'POST']) # add schedule
 def add_schedule():
     if 'user_id' not in session or session.get('role') != 'doctor':
         flash("Access denied.", "danger")
