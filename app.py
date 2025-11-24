@@ -428,7 +428,7 @@ def cancel_appointment(appointment_id):
     return redirect(url_for('doctor_dashboard'))
 
 
-@app.route('/patient')
+@app.route('/patient') # patient routes
 def patient_dashboard():
     if 'user_id' not in session or session.get('role') != 'patient':
         flash("Please login first!", "warning")
