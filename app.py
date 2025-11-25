@@ -551,7 +551,7 @@ def patient_history(patient_id):
     return render_template('patient_history.html', patient=patient, history=history)
 
 
-@app.route('/update_history', methods=['POST'])
+@app.route('/update_history', methods=['POST']) # update history
 def update_history():
     patient_id = request.form['patient_id']
     visit_type = request.form['visit_type']
