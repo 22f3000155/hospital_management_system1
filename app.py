@@ -527,7 +527,7 @@ def admin_complete_appointment(appointment_id):
     return redirect(url_for('admin_dashboard'))
 
 # @app.route('/admin/appointment/cancel/<int:appointment_id>', meethod=["POST"])
-@app.route('/patient/appointment/cancel/<int:appointment_id>', methods=['POST'])
+@app.route('/patient/appointment/cancel/<int:appointment_id>', methods=['POST']) # patient appointment 
 def patient_cancel_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     appointment.status = "Cancelled"
