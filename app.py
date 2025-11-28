@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta, date, time
-from models import db, User, Department, Appointment, Treatment, Availability, DoctorSchedule
+from models import db, User, Department, Appointment, Treatment, Availability, DoctorSchedule, Prescription, MedicalTest
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'something'
@@ -19,12 +19,12 @@ with app.app_context():
 
 
 
-@app.route('/')
+@app.route('/') # home
 def index():
     return render_template('index.html')
 
 
-@app.route('/register/patient', methods=['GET', 'POST'])
+@app.route('/register/patient', methods=['GET', 'POST']) # patient registration
 def register():
     if request.method == 'POST':
         name = request.form['name']
@@ -59,13 +59,13 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST']) # login
 def login():
     if request.method == 'POST':
         email = request.form.get('email').lower()
         password = request.form.get('password')
         
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first() # Check if user exists
 
         if not user:
             flash("Email not found", "danger")
@@ -76,7 +76,7 @@ def login():
             return redirect(url_for('login'))
 
         
-        session['user_id'] = user.id
+        session['user_id'] = user.id # Store user ID in session
         session['role'] = user.role
 
         
@@ -87,7 +87,7 @@ def login():
         else:
             return redirect(url_for('patient_dashboard'))
 
-    return render_template('login.html')
+    return render_template('login.html') # Render login page
 
 @app.route('/logout')
 def logout():
@@ -96,7 +96,7 @@ def logout():
 
 
 
-@app.route('/admin')
+@app.route('/admin') # admin
 def admin_dashboard():
 
     if 'user_id' not in session:
@@ -109,7 +109,7 @@ def admin_dashboard():
         flash("Access denied!", "danger")
         return redirect(url_for('login'))
 
-    doctors = User.query.filter_by(role='doctor').all()
+    doctors = User.query.filter_by(role='doctor').all() # Fetch all doctors
     patients = User.query.filter_by(role='patient').all()
     appointments = Appointment.query.all()
 
@@ -120,7 +120,7 @@ def admin_dashboard():
         appointments=appointments
     )
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET']) # search bar
 def search_all():
     if 'user_id' not in session:
         flash("Please login first!", "warning")
@@ -139,7 +139,7 @@ def search_all():
         (User.name.ilike(f'%{query}%')) | (User.email.ilike(f'%{query}%'))
     ).all()
 
-    appointments = Appointment.query.all()
+    appointments = Appointment.query.all() # Fetch all appointments
 
     return render_template(
         'admin_dashboard.html',
@@ -147,10 +147,10 @@ def search_all():
         patients=patients,
         appointments=appointments,
         search_query=query
-    )
+    ) # Render admin dashboard
 
 
-@app.route('/admin/add_doctor', methods=['GET', 'POST'])
+@app.route('/admin/add_doctor', methods=['GET', 'POST']) # add doctor
 def add_doctor():
     
     if 'user_id' not in session:
@@ -171,14 +171,14 @@ def add_doctor():
         password = request.form['password'] 
         specialization = request.form['specialization']
         dept_name = request.form['department']
-
+        
     
-        if User.query.filter_by(email=email).first():
+        if User.query.filter_by(email=email).first(): # Check if email already exists
             flash("Email already in use", "danger")
             return redirect(url_for('add_doctor'))
 
     
-        dept = Department.query.filter_by(name=dept_name).first()
+        dept = Department.query.filter_by(name=dept_name).first() # Check if department exists
         if not dept:
             dept = Department(name=dept_name)
             db.session.add(dept)
@@ -191,21 +191,22 @@ def add_doctor():
             password=password,  
             role='doctor',
             department_id=dept.id
+
         )
         doctor.specialization = specialization
 
-        db.session.add(doctor)
+        db.session.add(doctor) # Add doctor
         db.session.commit()
 
         flash("Doctor added successfully!", "success")
         return redirect(url_for('admin_dashboard'))
 
    
-    departments = Department.query.all()
+    departments = Department.query.all() # Fetch all departments
     return render_template('admin_add_doctor.html', departments=departments)
 
 
-@app.route('/admin/edit_doctor/<int:doctor_id>', methods=['GET', 'POST'])
+@app.route('/admin/edit_doctor/<int:doctor_id>', methods=['GET', 'POST']) # edit doctor
 def edit_doctor(doctor_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -214,20 +215,20 @@ def edit_doctor(doctor_id):
     if admin.role != 'admin':
         return redirect(url_for('login'))
 
-    doctor = User.query.get(doctor_id)
+    doctor = User.query.get(doctor_id) # Fetch doctor
     if not doctor or doctor.role != 'doctor':
         flash("Doctor not found", "danger")
         return redirect(url_for('admin_dashboard'))
 
-    if request.method == 'POST':
-        doctor.name = request.form['name']
+    if request.method == 'POST': # Update doctor
+        doctor.name = request.form['name']  
         doctor.email = request.form['email']
         doctor.password = request.form['password']
         doctor.specialization = request.form['specialization']
         dept_name = request.form['department']
 
         # update department
-        dept = Department.query.filter_by(name=dept_name).first()
+        dept = Department.query.filter_by(name=dept_name).first() # Check if department exists
         if not dept:
             dept = Department(name=dept_name)
             db.session.add(dept)
@@ -239,11 +240,11 @@ def edit_doctor(doctor_id):
         flash("Doctor updated successfully", "success")
         return redirect(url_for('admin_dashboard'))
 
-    departments = Department.query.all()
+    departments = Department.query.all() # Fetch all departments
     return render_template("admin_edit_doctor.html", doctor=doctor, departments=departments)
 
 
-@app.route('/admin/delete_doctor/<int:doctor_id>')
+@app.route('/admin/delete_doctor/<int:doctor_id>') # delete doctor
 def delete_doctor(doctor_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -264,7 +265,7 @@ def delete_doctor(doctor_id):
     flash("Doctor removed", "success")
     return redirect(url_for('admin_dashboard'))
 
-@app.route('/admin/toggle_blacklist/<int:doctor_id>')
+@app.route('/admin/toggle_blacklist/<int:doctor_id>') # toggle blacklist
 def toggle_blacklist(doctor_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -291,7 +292,7 @@ def toggle_blacklist(doctor_id):
 
 
 
-@app.route('/admin/edit_patient/<int:id>', methods=['GET', 'POST'])
+@app.route('/admin/edit_patient/<int:id>', methods=['GET', 'POST']) # edit patient
 def edit_patient(id):
     patient = User.query.get_or_404(id)
     if request.method == 'POST':
@@ -303,7 +304,7 @@ def edit_patient(id):
         return redirect(url_for('admin_dashboard'))
     return render_template('edit_patient.html', patient=patient)
 
-@app.route('/admin/delete_patient/<int:id>')
+@app.route('/admin/delete_patient/<int:id>') # delete patient
 def delete_patient(id):
     patient = User.query.get_or_404(id)
     db.session.delete(patient)
@@ -311,7 +312,7 @@ def delete_patient(id):
     flash("Patient deleted successfully.", "success")
     return redirect(url_for('admin_dashboard'))
 
-@app.route('/admin/toggle_blacklist_patient/<int:patient_id>')
+@app.route('/admin/toggle_blacklist_patient/<int:patient_id>') # toggle blacklist
 def toggle_blacklist_patient(patient_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -326,7 +327,7 @@ def toggle_blacklist_patient(patient_id):
         return redirect(url_for('admin_dashboard'))
 
     # Toggle blacklist status
-    patient.blacklist = not patient.blacklist
+    patient.blacklist = not patient.blacklist # Toggle blacklist
     db.session.commit()
 
     if patient.blacklist:
@@ -359,7 +360,7 @@ def doctor_dashboard():
         is_booked=False
     ).filter(DoctorSchedule.date >= date.today()).order_by(
         DoctorSchedule.date.asc(), DoctorSchedule.time.asc()
-    ).all()
+    ).all() # Fetch available slots
 
     return render_template(
         'doctor_dashboard.html',
@@ -368,7 +369,7 @@ def doctor_dashboard():
         available_slots=available_slots
     )
 
-@app.route('/doctor/add_availability', methods=['GET', 'POST'])
+@app.route('/doctor/add_availability', methods=['GET', 'POST']) 
 def add_availability():
     doctor = User.query.get(session['user_id'])
     if request.method == 'POST':
@@ -387,7 +388,7 @@ def add_availability():
 
     return render_template('add_availability.html')
 
-@app.route('/doctor/provide_availability', methods=['GET', 'POST'])
+@app.route('/doctor/provide_availability', methods=['GET', 'POST']) # 
 def provide_availability():
     if request.method == 'POST':
         date_str = request.form.get('date')  
@@ -411,7 +412,7 @@ def provide_availability():
 
     return render_template('provide_availability.html')
 
-@app.route('/doctor/complete/<int:appointment_id>')
+@app.route('/doctor/complete/<int:appointment_id>') # complete
 def mark_completed(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     appointment.status = "Completed"
@@ -419,7 +420,7 @@ def mark_completed(appointment_id):
     flash("Appointment marked as completed.", "success")
     return redirect(url_for('doctor_dashboard'))
 
-@app.route('/doctor/cancel/<int:appointment_id>')
+@app.route('/doctor/cancel/<int:appointment_id>') # cancel
 def cancel_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     appointment.status = "Cancelled"
@@ -440,7 +441,7 @@ def patient_dashboard():
 
 
 
-@app.route('/patient/book', methods=['GET', 'POST'])
+@app.route('/patient/book', methods=['GET', 'POST']) # patient book appointments
 def book_appointment():
     if 'user_id' not in session or session.get('role') != 'patient':
         flash("Access denied.", "danger")
@@ -533,9 +534,9 @@ def patient_cancel_appointment(appointment_id):
     appointment.status = "Cancelled"
     db.session.commit()
     flash("Appointment cancelled.", "warning")
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('patient_dashboard'))
 
-@app.route('/admin/patient_history/<int:patient_id>')
+@app.route('/admin/patient_history/<int:patient_id>') # patient history
 def patient_history(patient_id):
     if 'user_id' not in session or session.get('role') != 'admin':
         flash("Access denied!", "danger")
@@ -577,8 +578,7 @@ def update_history():
 
 
 
-
-if __name__ == "__main__":
+if __name__ == "__main__": # main
     with app.app_context():
         db.create_all()
         if not User.query.filter_by(role="admin").first():

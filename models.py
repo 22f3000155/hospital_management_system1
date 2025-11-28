@@ -25,8 +25,9 @@ class User(db.Model):
     address = db.Column(db.String(200), nullable=True)
     gender = db.Column(db.String(20), nullable=True)
     blacklist = db.Column(db.Boolean,default = False)
+    specialization = db.Column(db.String)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id', ondelete='CASCADE'), nullable=True)
-
+    
     doctor_appointments = db.relationship(
         'Appointment',
         backref='doctor',

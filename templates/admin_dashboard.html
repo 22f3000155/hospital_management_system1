@@ -114,6 +114,7 @@
 <br>
 
 
+
 <h2>Admin Dashboard</h2>
 <a class="logout" href="/logout">Logout</a>
 
@@ -168,7 +169,7 @@
             <td>{{ p.name }}</td>
             <td>{{ p.email }}</td>
             <td>
-                {% if p.appointments|length > 0 %}
+                {% if p.patient_appointments.count() > 0 %}
                     Appointment Booked
                 {% else %}
                     No Appointment

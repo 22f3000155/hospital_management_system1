@@ -53,7 +53,7 @@
             color: #444; 
         }
 
-        /* buttons */
+        
         .btn { 
             padding: 6px 10px; 
             border-radius: 4px; 
@@ -80,8 +80,16 @@
 </head>
 <body>
 
-<h2>Patient Dashboard</h2>
+<h2>Patient Dashboard - {{ patient.name }}</h2>
+<!-- <h3>Here is your appointment dashboard</h3> -->
 <a class="logout" href="/logout">Logout</a>
+
+    <div class="section">
+        <p><strong>Name:</strong> {{ patient.name }}</p>
+        <p><strong>Email:</strong> {{ patient.email }}</p>
+        <p><strong>Gender:</strong> {{ patient.gender if patient.gender else "N/A" }}</p>
+        <p><strong>Address:</strong> {{ patient.address if patient.address else "N/A" }}</p>
+    </div>
 
 <div class="section">
     <h3>My Appointments</h3>
